@@ -78,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'payhere_main.wsgi.application'
 
-
+AUTH_USER_MODEL = 'user.UserModel'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
