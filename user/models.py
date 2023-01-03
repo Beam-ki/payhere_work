@@ -21,7 +21,7 @@ class MyUserManager(BaseUserManager):
         instance.save(using=self._db)
         return instance
 
-    def create_superuser(self, email, profilename, password=None):
+    def create_superuser(self, email,password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -45,8 +45,12 @@ class  UserModel(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.email
+    
     def has_perm(self, perm, obj=None):
         "Does the instance have a specific permission?"
         # Simplest possible answer: Yes, always
@@ -56,3 +60,8 @@ class  UserModel(AbstractBaseUser):
         "Does the instance have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+    @property
+    def is_staff(self):
+        "Is the instance a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
