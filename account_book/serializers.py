@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields=("email",)
 
 class account_bookSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     class Meta:
         model = account_book
         fields = "__all__"

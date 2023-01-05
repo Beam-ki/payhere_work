@@ -9,18 +9,22 @@ from rest_framework.generics import get_object_or_404
 # Create your views here.
 class accout_book_view(APIView):
     def get(self, request):
+        
         account_books = account_book.objects.filter().order_by('-created_at')
+        account_books1= account_books.order_by('-id')
         paginator = PageNumberPagination()
-        p = paginator.paginate_queryset(queryset=account_books, request=request)
-        paging = get_pagination_result(paginator, account_books.count())
+        p = paginator.paginate_queryset(queryset=account_books1, request=request)
+        paging = get_pagination_result(paginator, account_books1.count())
         serializer = account_bookSerializer(p, many=True)
         return Response({"data": serializer.data, "page":paging}, status=status.HTTP_200_OK)
+    
 class account_bookCreateView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def post(self, request):
         serializer = account_book_Create_Serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
+            print(request.user)
             return Response({"data": serializer.data, "message": "생성이 완료되었습니다"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -33,7 +37,7 @@ class account_bookView(APIView):
         account_book_id = int(request.GET.get('account_book_id', None))
         Account_book = get_object_or_404(account_book, id=account_book_id)
         serializer = account_book_Create_Serializer(Account_book)
-        return Response({"products":serializer.data}, status=status.HTTP_200_OK)   
+        return Response({"data":serializer.data}, status=status.HTTP_200_OK)   
     
     def put(self, request):
             account_book_id = int(request.GET.get('account_book_id', None))
